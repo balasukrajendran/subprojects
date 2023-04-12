@@ -1,0 +1,6 @@
+settings.gradle:
+rootProject.name = 'qa-production-sanity'
+include 'sp'
+include 'nt'
+startParameter.continueOnFailure = true
+

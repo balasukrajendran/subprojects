@@ -1,0 +1,113 @@
+Parent build.gradle:
+buildscript {
+    ext {
+        gradleBuildParentVersion = '3.0.+'
+    }
+    repositories {
+        maven { url 'https://artifactory/artifactory/libs-release/' }
+    }
+    dependencies {
+        classpath(group: 'au.com.securepay.tools.development', name: 'gradle-build-parent', version: gradleBuildParentVersion, ext: 'zip')
+        classpath(group: 'com.netflix.nebula', name: 'gradle-ospackage-plugin', version: '8.3.0')
+        classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '4.15.2')
+        classpath(group: 'org.springframework.build.gradle', name: 'propdeps-plugin', version: '0.0.7')
+    }
+}
+
+plugins {
+    id 'net.researchgate.release' version '2.7.0'
+    id 'com.jfrog.artifactory' version '4.7.4'
+    id 'org.sonarqube' version '2.6.2'
+    id 'java'
+    id 'war'
+//    id 'io.qameta.allure' version '2.8.1'
+    id "io.qameta.allure-aggregate-report" version "2.11.2"
+//    id "io.qameta.allure.gradle.report"
+}
+
+//project () {
+//    task('hello').doLast {
+//        println "I am $project.name"
+//    }
+//}
+
+allprojects {
+    repositories {
+        maven { url 'https://artifactory/artifactory/libs-release/' }
+    }
+    task('helloa').doLast {
+        println "I am $project.name"
+    }
+}
+
+group 'au.com.securepay.test.automation.vts'
+sourceCompatibility = 1.8
+
+repositories {
+    maven { url 'https://artifactory/artifactory/libs-release/' }
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testImplementation group: 'au.com.securepay.test.automation', name: 'qa-ait-framework', version: '0.8.0'
+    testImplementation group: 'org.apache.tomcat', name: 'tomcat-jdbc', version:'9.0.16'
+    testImplementation 'com.microsoft.sqlserver:mssql-jdbc:7.0.0.jre8'
+    testImplementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.48'
+    // SLF4J
+    testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+}
+
+
+task PROD_CHROME(type: Test, group: 'verification') {
+    systemProperty "test-profile", "production"
+    systemProperty "cucumber.filter.tags", "@PROD"
+    systemProperty "automation.browser", "CHROME"
+    systemProperty "selenide.headless", "false"
+}
+
+task STG_CHROME(type: Test, group: 'verification') {
+    systemProperty "test-profile", "stg"
+    systemProperty "cucumber.filter.tags", "@STG"
+    systemProperty "automation.browser", "CHROME"
+    systemProperty "selenide.headless", "false"
+}
+
+task CI_CHROME(type: Test, group: 'verification') {
+    systemProperty "test-profile", "ci"
+    systemProperty "cucumber.filter.tags", "@CI"
+    systemProperty "automation.browser", "CHROME"
+    systemProperty "selenide.headless", "false"
+}
+//For API:
+task PROD_API(type: Test, group: 'verification') {
+    systemProperty "test-profile", "production"
+    systemProperty "cucumber.filter.tags", "@API"
+    systemProperty "automation.browser", "CHROME"
+    systemProperty "selenide.headless", "true"
+}
+
+task STG_API(type: Test, group: 'verification') {
+    systemProperty "test-profile", "stg"
+    systemProperty "cucumber.filter.tags", "@API"
+    systemProperty "automation.browser", "CHROME"
+    systemProperty "selenide.headless", "true"
+}
+
+task CI_API(type: Test, group: 'verification') {
+    systemProperty "test-profile", "ci"
+    systemProperty "cucumber.filter.tags", "@API"
+    systemProperty "automation.browser", "CHROME"
+    systemProperty "selenide.headless", "true"
+}
+
+afterReleaseBuild.dependsOn artifactoryPublish
+
+allure {
+//    autoconfigure = false
+//    aspectjweaver = true
+    version = '2.13.5'
+//    downloadLinkFormat = 'https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/%s/allure-commandline-%<s.zip'
+//    clean = true
+}

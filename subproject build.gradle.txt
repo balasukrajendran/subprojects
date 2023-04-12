@@ -1,0 +1,36 @@
+subproject build.gradle:
+plugins {
+    id 'java'
+    id "io.qameta.allure-adapter" version "2.11.2"
+}
+
+group 'au.com.securepay.test.automation.production'
+
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+dependencies {
+    testImplementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    testImplementation group: 'net.sourceforge.jtds', name: 'jtds', version: '1.3.1'
+    testImplementation group: 'au.com.securepay.test.automation', name: 'qa-ait-framework', version: '0.9.0'
+    testImplementation group: 'com.browserup', name: 'browserup-proxy-core', version: '2.1.2'
+    testImplementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
+    testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0'
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.0'
+}
+
+test {
+    systemProperty "test-profile", project.properties['test-profile']
+    systemProperty "cucumber.filter.tags", project.properties['cucumber.filter.tags']
+    systemProperty "automation.platform", project.properties['automation.platform']
+    systemProperty "automation.browser", project.properties['automation.browser']
+    systemProperty "selenide.headless", project.properties['selenide.headless']
+    systemProperty "selenide.proxyEnabled", "true"
+    //Only need below for test from local
+    //  systemProperty "webdriver.chrome.driver", "C:\\data\\Data\\Tools\\webdriver\\chrome\\chromedriver.exe"
+}
