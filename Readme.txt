@@ -54,7 +54,7 @@ For STG:
     NT payment via Directpost-1 as STG option not avaiable on UI
     DDA
     HPP - If captcha is disabled, it should work through Automation
-    http://stg-transact.securepay.com.au/nabtransact/   [https is included in Suit]
+    http://ddddddddtransact/   [https is included in Suit]
     PayByWeb
     aus-post-mail-redirection.url
 #   STG API 
